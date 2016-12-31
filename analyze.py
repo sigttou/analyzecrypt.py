@@ -19,9 +19,13 @@ SCRIPT = """
 
 def on_message(message, data):
     if message['type'] == 'send':
-        log.info(json.loads(message['payload']))
+        info = json.loads(message['payload'])
+        with open("results/" + info["name"] + ".dat", "a+") as f:
+            json.dump(info, f)
+            f.write("\n")
+        log.info("stored call to " + info["name"])
     else:
-        print(message)
+        log.warning("Could not parse: " + message)
 
 
 def genscript(info, funct):
@@ -36,11 +40,13 @@ def genscript(info, funct):
             fstring += '"content": \' + '
             if(p["type"] == "string"):
                 fstring += ""
-            if(p["type"] == "num"):
+            elif(p["type"] == "num"):
                 fstring += 'args[{}]'.format(info["parameters"].index(p))
                 fstring += '.toInt32()'
-            if(p["type"] == "addr"):
+            elif(p["type"] == "addr"):
                 fstring += ""
+            else:
+                log.warn("UNKNOWN TYPE IN: " + p)
             fstring += ' + \'}, '
 
     if fstring[-2:] == ', ':  # remove ', '
@@ -57,7 +63,19 @@ def genscript(info, funct):
 
 def main(target):
     log.info("Going to analyze {}".format(target))
-    session = frida.get_usb_device().attach(target)
+    try:
+        session = frida.get_usb_device().attach(target)
+    except frida.ServerNotRunningError:
+        try:
+            log.error("Please start frida server first")
+        except:
+            sys.exit(-1)
+    except frida.TimedOutError:
+        try:
+            log.error("Frida timeout...")
+        except:
+            sys.exit(-1)
+
     modules = session.enumerate_modules()
 
     with open("config/modules.json") as j:
@@ -98,8 +116,10 @@ def main(target):
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:
-        log.warning("Usage: %s <process name or PID>" % __file__)
-        sys.exit(-1)
+        try:
+            log.error("Usage: %s <process name or PID>" % __file__)
+        except:
+            sys.exit(-1)
 
     try:
         target_process = int(sys.argv[1])
