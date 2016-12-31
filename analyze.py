@@ -2,9 +2,12 @@
 import frida
 import sys
 from pwn import log
+import json
+import os
 
-MODULES = ["libc.so", "libcrypto.so"]
-LOOKFOR = ["AES_cbc_encrypt", "AES_encrypt"]
+MODULES = []
+FUNCTIONS = []
+
 SCRIPT = """
     Interceptor.attach(ptr("{addr}"), {{
         onEnter: function(args) {{
@@ -26,6 +29,10 @@ def main(target):
     session = frida.get_usb_device().attach(target)
     modules = session.enumerate_modules()
 
+    with open("config/modules.json") as j:
+        MODULES = json.load(j)
+    log.info("Will look at: {}".format(', '.join(MODULES)))
+
     # Get only needed Modules
     tmp = []
     for M in MODULES:
@@ -37,7 +44,14 @@ def main(target):
         functions += x.enumerate_exports()
     log.info("Found {} functions".format(len(functions)))
 
-    for f in LOOKFOR:
+    # Which functions do I need to look at?
+    for filename in os.listdir("functions/"):
+        with open("functions/" + filename) as j:
+            FUNCTIONS.append(json.load(j))
+    lookup = [x["name"] for x in FUNCTIONS]
+    log.info("Will look for: {}".format(', '.join(lookup)))
+
+    for f in lookup:
         result = functions[[x.name for x in functions].index(f)]
         log.info("Found {} in {} @ {}".format(result.name,
                                               result.module.name,

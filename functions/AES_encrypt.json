@@ -1,0 +1,21 @@
+{
+  "name": "AES_encrypt",
+  "parameters": [
+    {
+      "name": "input",
+      "type": "string",
+      "monitor": false
+    },
+    {
+      "name": "output",
+      "type": "string",
+      "monitor": false
+    },
+    {
+      "name": "key",
+      "type": "addr",
+      "monitor": false
+    }
+  ],
+  "monitor": true
+}
