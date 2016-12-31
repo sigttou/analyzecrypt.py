@@ -14,7 +14,7 @@
     {
       "name": "length",
       "type": "num",
-      "monitor": false
+      "monitor": true
     },
     {
       "name": "key",

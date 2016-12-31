@@ -19,9 +19,40 @@ SCRIPT = """
 
 def on_message(message, data):
     if message['type'] == 'send':
-        log.info(message['payload'])
+        log.info(json.loads(message['payload']))
     else:
         print(message)
+
+
+def genscript(info, funct):
+    fstring = '\'{'
+    fstring += '"name": "{}", '.format(funct.name)
+    fstring += '"parameters": ['
+
+    for p in info["parameters"]:
+        if p["monitor"]:
+            fstring += '{'
+            fstring += '"name": "{}", '.format(p["name"])
+            fstring += '"content": \' + '
+            if(p["type"] == "string"):
+                fstring += ""
+            if(p["type"] == "num"):
+                fstring += 'args[{}]'.format(info["parameters"].index(p))
+                fstring += '.toInt32()'
+            if(p["type"] == "addr"):
+                fstring += ""
+            fstring += ' + \'}, '
+
+    if fstring[-2:] == ', ':  # remove ', '
+        fstring = fstring[:-2]
+    fstring += ']'
+    fstring += '}\''
+    d = {
+            'addr': funct.absolute_address,
+            'format': fstring
+        }
+    tosend = SCRIPT.format(**d)
+    return tosend
 
 
 def main(target):
@@ -57,13 +88,8 @@ def main(target):
                                               result.module.name,
                                               hex(result.absolute_address)
                                               ))
-        fstring = "\"{} - called\"".format(result.name)
-        d = {
-                'addr': result.absolute_address,
-                'format': fstring
-            }
-        tosend = SCRIPT.format(**d)
-        script = session.create_script(tosend)
+        script = session.create_script(genscript(FUNCTIONS[lookup.index(f)],
+                                                 result))
         script.on('message', on_message)
         script.load()
     log.info("Injected all needed scripts, now listening")
