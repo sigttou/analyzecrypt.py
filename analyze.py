@@ -4,11 +4,11 @@ import sys
 from pwn import log
 
 MODULES = ["libc.so", "libcrypto.so"]
-LOOKFOR = "AES_cbc_encrypt"
+LOOKFOR = ["AES_cbc_encrypt", "AES_encrypt"]
 SCRIPT = """
-    Interceptor.attach(ptr("{}"), {{
+    Interceptor.attach(ptr("{addr}"), {{
         onEnter: function(args) {{
-            send(args[0].toString(16));
+            send({format});
         }}
     }});
 """
@@ -37,15 +37,22 @@ def main(target):
         functions += x.enumerate_exports()
     log.info("Found {} functions".format(len(functions)))
 
-    result = functions[[x.name for x in functions].index(LOOKFOR)]
-    log.info("Found {} in {} @ {}".format(result.name,
-                                          result.module.name,
-                                          hex(result.absolute_address)
-                                          ))
-
-    script = session.create_script(SCRIPT.format(result.absolute_address))
-    script.on('message', on_message)
-    script.load()
+    for f in LOOKFOR:
+        result = functions[[x.name for x in functions].index(f)]
+        log.info("Found {} in {} @ {}".format(result.name,
+                                              result.module.name,
+                                              hex(result.absolute_address)
+                                              ))
+        fstring = "\"{} - called\"".format(result.name)
+        d = {
+                'addr': result.absolute_address,
+                'format': fstring
+            }
+        tosend = SCRIPT.format(**d)
+        script = session.create_script(tosend)
+        script.on('message', on_message)
+        script.load()
+    log.info("Injected all needed scripts, now listening")
     sys.stdin.read()
 
 
