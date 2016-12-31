@@ -1,0 +1,21 @@
+{
+  "name": "AES_set_decrypt_key",
+  "parameters": [
+    {
+      "name": "userkey",
+      "type": "string",
+      "monitor": false
+    },
+    {
+      "name": "length",
+      "type": "num",
+      "monitor": false
+    },
+    {
+      "name": "key",
+      "type": "addr",
+      "monitor": false
+    }
+  ],
+  "monitor": true
+}
