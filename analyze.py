@@ -21,11 +21,11 @@ def on_message(message, data):
     if message['type'] == 'send':
         info = json.loads(str(message['payload']).encode('string-escape'),
                           strict=False)
-        with open("results/" + info["name"] + ".dat", "a+") as f:
+        filename = "results/" + sys.argv[1] + "/" + info["name"] + ".dat"
+        with open(filename, "a+") as f:
             json.dump(info, f)
             f.write("\n")
         log.info("stored call to " + info["name"])
-        log.info(info)
     else:
         log.warning("Could not parse: " + str(message))
 
@@ -86,6 +86,9 @@ def main(target):
     with open("config/modules.json") as j:
         MODULES = json.load(j)
     log.info("Will look at: {}".format(', '.join(MODULES)))
+
+    if not os.path.exists("results/" + sys.argv[1]):
+        os.makedirs("results/" + sys.argv[1])
 
     # Get only needed Modules
     modules = session.enumerate_modules()
