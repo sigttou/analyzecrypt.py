@@ -4,7 +4,7 @@
     {
       "name": "input",
       "type": "string",
-      "monitor": false
+      "monitor": true
     },
     {
       "name": "output",

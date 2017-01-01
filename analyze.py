@@ -19,13 +19,14 @@ SCRIPT = """
 
 def on_message(message, data):
     if message['type'] == 'send':
-        info = json.loads(message['payload'])
+        info = json.loads(str(message['payload']).encode('string-escape'),
+                          strict=False)
         with open("results/" + info["name"] + ".dat", "a+") as f:
             json.dump(info, f)
             f.write("\n")
         log.info("stored call to " + info["name"])
     else:
-        log.warning("Could not parse: " + message)
+        log.warning("Could not parse: " + str(message))
 
 
 def genscript(info, funct):
@@ -37,9 +38,14 @@ def genscript(info, funct):
         if p["monitor"]:
             fstring += '{'
             fstring += '"name": "{}", '.format(p["name"])
-            fstring += '"content": \' + '
+            fstring += '"content": "\' + '
             if(p["type"] == "string"):
-                fstring += ""
+                fstring += '"\\' + '\\x" + '
+                fstring += 'Memory.readCString('
+                fstring += 'args[{}]'.format(info["parameters"].index(p))
+                fstring += ').split("").map(function(a){return '
+                fstring += 'a.charCodeAt(0).toString(16)}).join("\\'
+                fstring += '\\x")'
             elif(p["type"] == "num"):
                 fstring += 'args[{}]'.format(info["parameters"].index(p))
                 fstring += '.toInt32()'
@@ -47,7 +53,7 @@ def genscript(info, funct):
                 fstring += ""
             else:
                 log.warn("UNKNOWN TYPE IN: " + p)
-            fstring += ' + \'}, '
+            fstring += ' + \'"}, '
 
     if fstring[-2:] == ', ':  # remove ', '
         fstring = fstring[:-2]
@@ -76,13 +82,12 @@ def main(target):
         except:
             sys.exit(-1)
 
-    modules = session.enumerate_modules()
-
     with open("config/modules.json") as j:
         MODULES = json.load(j)
     log.info("Will look at: {}".format(', '.join(MODULES)))
 
     # Get only needed Modules
+    modules = session.enumerate_modules()
     tmp = []
     for M in MODULES:
         tmp.append(modules[[x.name for x in modules].index(M)])
