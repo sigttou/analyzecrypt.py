@@ -19,7 +19,7 @@
     {
       "name": "key",
       "type": "addr",
-      "monitor": false
+      "monitor": true
     },
     {
       "name": "IV",

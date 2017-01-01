@@ -25,6 +25,7 @@ def on_message(message, data):
             json.dump(info, f)
             f.write("\n")
         log.info("stored call to " + info["name"])
+        log.info(info)
     else:
         log.warning("Could not parse: " + str(message))
 
@@ -50,7 +51,7 @@ def genscript(info, funct):
                 fstring += 'args[{}]'.format(info["parameters"].index(p))
                 fstring += '.toInt32()'
             elif(p["type"] == "addr"):
-                fstring += ""
+                fstring += 'args[{}]'.format(info["parameters"].index(p))
             else:
                 log.warn("UNKNOWN TYPE IN: " + p)
             fstring += ' + \'"}, '
