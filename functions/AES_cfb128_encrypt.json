@@ -1,5 +1,5 @@
 {
-    "name": "AES_ecb_encrypt",
+    "name": "AES_cfb128_encrypt",
     "parameters": [
         {
             "monitor": false,
@@ -13,7 +13,22 @@
         },
         {
             "monitor": false,
+            "name": "length",
+            "type": "num"
+        },
+        {
+            "monitor": false,
             "name": "key",
+            "type": "addr"
+        },
+        {
+            "monitor": false,
+            "name": "ivec",
+            "type": "string"
+        },
+        {
+            "monitor": false,
+            "name": "num",
             "type": "addr"
         },
         {

@@ -1,21 +1,20 @@
 {
-  "name": "private_AES_set_encrypt_key",
-  "parameters": [
-    {
-      "name": "userkey",
-      "type": "string",
-      "monitor": false
-    },
-    {
-      "name": "length",
-      "type": "num",
-      "monitor": false
-    },
-    {
-      "name": "key",
-      "type": "addr",
-      "monitor": false
-    }
-  ],
-  "monitor": true
+    "name": "private_AES_set_encrypt_key",
+    "parameters": [
+        {
+            "monitor": false,
+            "name": "userKey",
+            "type": "string"
+        },
+        {
+            "monitor": false,
+            "name": "bits",
+            "type": "num"
+        },
+        {
+            "monitor": false,
+            "name": "key",
+            "type": "addr"
+        }
+    ]
 }
