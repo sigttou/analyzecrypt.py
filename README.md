@@ -25,5 +25,5 @@ The code is enough, it's just some lines.
 - Monitor memory accesses (blocked by Frida: MemoryAccessMonitor is only available on Windows for now)
 	- could be done on function calls if same address is given check for content changes
 - Support multiple platforms (should be really easy - Frida supports it)
-- Get information directly from C/Java code (Use llvm/a java code analyzer for example)
+- Get information directly from C/Java code (Use [pycparser](https://github.com/eliben/pycparser)/a java code analyzer for example)
 - Analyse the results
