@@ -110,7 +110,11 @@ def main(target):
     log.info("Will look for: {}".format(', '.join(lookup)))
 
     for f in lookup:
-        result = functions[[x.name for x in functions].index(f)]
+        try:
+            result = functions[[x.name for x in functions].index(f)]
+        except ValueError:
+            log.warn("Function " + f + "not found")
+            continue
         log.info("Found {} in {} @ {}".format(result.name,
                                               result.module.name,
                                               hex(result.absolute_address)
