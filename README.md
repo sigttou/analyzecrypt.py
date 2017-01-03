@@ -18,9 +18,12 @@ The code is enough, it's just some lines.
 
 ## TODO:
 - More monitoring options:
-	- read content from Addresses not only Strings
-	- interconnect between functions(lengths, etc.)
-- Support also Java functions not only C Libraries
-- Monitor Memory Accesses (blocked by FRIDA: MemoryAccessMonitor is only available on Windows for now)
-- Support multiple platforms (should be really easy)
-- Analyse the results(!)
+	- read content from addresses not only strings
+		- support structs like functions
+	- interconnections between functions(lengths, etc.)
+- Support Java functions not only C libraries
+- Monitor memory accesses (blocked by Frida: MemoryAccessMonitor is only available on Windows for now)
+	- could be done on function calls if same address is given check for content changes
+- Support multiple platforms (should be really easy - Frida supports it)
+- Get information directly from C/Java code (Use llvm/a java code analyzer for example)
+- Analyse the results
