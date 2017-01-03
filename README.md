@@ -26,4 +26,5 @@ The code is enough, it's just some lines.
 	- could be done on function calls if same address is given check for content changes
 - Support multiple platforms (should be really easy - Frida supports it)
 - Get information directly from C/Java code (Use [pycparser](https://github.com/eliben/pycparser)/a java code analyzer for example)
+	- finished for C headers, see `get_functions.py`
 - Analyse the results
