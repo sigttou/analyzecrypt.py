@@ -6,7 +6,7 @@ Python application used to monitor function calls on Android via [Frida](https:/
 ```
 $ virtualenv-2.7 --distribute --no-site-packages venv
 $ source venv/bin/activate
-(venv) $ pip install pwn frida
+(venv) $ pip install pwn frida pycparser
 ```
 
 ## Configuration
