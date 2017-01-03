@@ -3,7 +3,8 @@ import sys
 from pwn import log
 from pycparser import parse_file
 import pycparser
-# import json
+import json
+import os.path
 
 
 FAKE_LIBC = "c_code/utils/fake_libc_include"
@@ -28,10 +29,49 @@ def get_type(x):
     return f
 
 
-def main(filename):
-    ast = parse_file(filename, use_cpp=True, cpp_args="-I" + FAKE_LIBC)
+def print_function(f):
+    tolog = []
+    for p in f.params:
+        con = " "
+        if(p.isptr):
+            con = "* "
+        if(p.name):
+            tolog.append(p.type + con + p.name)
+    params = ", ".join(tolog)
+    con = " "
+    if(f.isptr):
+        con = "* "
+    log.info(f.type + con + f.name + "(" + params + ")")
+
+
+def export_function(f):
+    fdesc = {}
+    fdesc["name"] = f.name
+    fdesc["parameters"] = []
+    for p in f.params:
+        entry = {}
+        entry["name"] = p.name
+        if(p.isptr):
+            entry["type"] = "addr"
+            if("char" in p.type):
+                entry["type"] = "string"
+        else:
+            entry["type"] = "num"
+        entry["monitor"] = False
+        if(p.name):
+            fdesc["parameters"].append(entry)
+    filename = "functions/" + f.name + ".json"
+    if(os.path.isfile(filename)):
+        log.warn("File " + filename + " already exists!")
+    else:
+        with open(filename, 'w') as outfile:
+            json.dump(fdesc, outfile,
+                      sort_keys=True, indent=4, separators=(',', ': '))
+
+
+def get_functions(tree):
     functions = []
-    for e in ast.ext:
+    for e in tree:
         if isinstance(e.type, pycparser.c_ast.FuncDecl):
             f = get_type(e)
             f.isfunct = True
@@ -41,20 +81,15 @@ def main(filename):
                 p.name = ee.name
                 f.params.append(p)
             functions.append(f)
+    return functions
 
+
+def main(filename):
+    ast = parse_file(filename, use_cpp=True, cpp_args="-I" + FAKE_LIBC)
+    functions = get_functions(ast.ext)
     for f in functions:
-        tolog = []
-        for p in f.params:
-            con = " "
-            if(p.isptr):
-                con = "* "
-            if(p.name):
-                tolog.append(p.type + con + p.name)
-        params = ", ".join(tolog)
-        con = " "
-        if(f.isptr):
-            con = "* "
-        log.info(f.type + con + f.name + "(" + params + ")")
+        # print_function(f)
+        export_function(f)
 
 
 if __name__ == '__main__':
