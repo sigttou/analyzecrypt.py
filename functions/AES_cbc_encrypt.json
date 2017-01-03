@@ -1,36 +1,36 @@
 {
-  "name": "AES_cbc_encrypt",
-  "parameters": [
-    {
-      "name": "input",
-      "type": "string",
-      "monitor": true
-    },
-    {
-      "name": "output",
-      "type": "string",
-      "monitor": false
-    },
-    {
-      "name": "length",
-      "type": "num",
-      "monitor": true
-    },
-    {
-      "name": "key",
-      "type": "addr",
-      "monitor": true
-    },
-    {
-      "name": "IV",
-      "type": "string",
-      "monitor": false
-    },
-    {
-      "name": "MODE",
-      "type": "num",
-      "monitor": false
-    }
-  ],
-  "monitor": true
+    "monitor": true,
+    "name": "AES_cbc_encrypt",
+    "parameters": [
+        {
+            "monitor": false,
+            "name": "in",
+            "type": "string"
+        },
+        {
+            "monitor": false,
+            "name": "out",
+            "type": "string"
+        },
+        {
+            "monitor": false,
+            "name": "length",
+            "type": "num"
+        },
+        {
+            "monitor": false,
+            "name": "key",
+            "type": "addr"
+        },
+        {
+            "monitor": false,
+            "name": "ivec",
+            "type": "string"
+        },
+        {
+            "monitor": false,
+            "name": "enc",
+            "type": "num"
+        }
+    ]
 }

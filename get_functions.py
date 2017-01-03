@@ -48,6 +48,7 @@ def export_function(f):
     fdesc = {}
     fdesc["name"] = f.name
     fdesc["parameters"] = []
+    fdesc["monitor"] = True
     for p in f.params:
         entry = {}
         entry["name"] = p.name
