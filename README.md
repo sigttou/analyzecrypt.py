@@ -12,6 +12,7 @@ $ source venv/bin/activate
 ## Configuration
 - Add needed modules to `config/modules.json`
 - Add functions which you monitor in `functions` look at given files as examples
+	- Or use `get_functions.py` with C code you wish to analyse.
 
 ## Documentation 
 The code is enough, it's just some lines.
