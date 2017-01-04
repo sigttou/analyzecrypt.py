@@ -20,11 +20,15 @@ The code is enough, it's just some lines.
 - More monitoring options:
 	- read content from addresses not only strings
 		- support structs like functions
-	- interconnections between functions(lengths, etc.)
+	- interconnections between functions(lengths etc.)
+		- support return value of calls (onLeave e.g.)
 - Support Java functions not only C libraries
 - Monitor memory accesses (blocked by Frida: MemoryAccessMonitor is only available on Windows for now)
 	- could be done on function calls if same address is given check for content changes
 - Support multiple platforms (should be really easy - Frida supports it)
 - Get information directly from C/Java code (Use [pycparser](https://github.com/eliben/pycparser)/a java code analyzer for example)
-	- finished for C headers, see `get_functions.py`
+	- done for C headers, see `get_functions.py`
 - Analyse the results
+- Automated module search (No need to set them manually in the config, can already be done but is really slow)
+- Fix string representation in results to show hex code instead of unicode
+
