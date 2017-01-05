@@ -29,6 +29,7 @@ The code is enough, it's just some lines.
 - Support multiple platforms (should be really easy - Frida supports it)
 - Get information directly from C/Java code (Use [pycparser](https://github.com/eliben/pycparser)/a java code analyzer for example)
 	- done for C headers, see `get_functions.py`
+		- still needs improvement for more complex headers, like `socket.h`
 - Analyse the results
 - Automated module search (No need to set them manually in the config, can already be done but is really slow)
 - Fix string representation in results to show hex code instead of unicode
