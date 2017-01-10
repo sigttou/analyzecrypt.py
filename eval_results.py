@@ -63,6 +63,7 @@ def find_dub_all(params):
             for c in tocheck:
                 if c.get(key):
                     listing.append(c[key])
+            # If you think hard enough, this makes sense:
             listing = [i for j in listing for i in j]
             if params[index].get(key):
                 for x in params[index][key]:
