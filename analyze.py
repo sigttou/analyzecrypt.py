@@ -16,12 +16,14 @@ SCRIPT = """
     }});
 """
 
+PATH = ""
+
 
 def on_message(message, data):
     if message['type'] == 'send':
         info = json.loads(str(message['payload']).encode('string-escape'),
                           strict=False)
-        filename = "results/" + sys.argv[1] + "/" + info["name"] + ".dat"
+        filename = PATH + info["name"] + ".dat"
         with open(filename, "a+") as f:
             json.dump(info, f)
             f.write("\n")
@@ -69,6 +71,7 @@ def genscript(info, funct):
 
 
 def main(target):
+    global PATH
     log.info("Going to analyze {}".format(target))
     try:
         session = frida.get_usb_device().attach(target)
@@ -87,8 +90,16 @@ def main(target):
         MODULES = json.load(j)
     log.info("Will look at: {}".format(', '.join(MODULES)))
 
-    if not os.path.exists("results/" + sys.argv[1]):
-        os.makedirs("results/" + sys.argv[1])
+    PATH = "results/" + sys.argv[1] + "/"
+    if not os.path.exists(PATH):
+        os.makedirs(PATH)
+
+    runnr = len([x for x in os.listdir(PATH) if os.path.isdir(PATH + x)])
+    PATH += "run_"
+    PATH += str(runnr)
+    PATH += "/"
+    if not os.path.exists(PATH):
+        os.makedirs(PATH)
 
     # Get only needed Modules
     modules = session.enumerate_modules()
