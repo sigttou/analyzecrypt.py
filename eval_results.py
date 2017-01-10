@@ -19,24 +19,24 @@ def main(target, funcname):
         parameters = {}
         funfile = r + funcname + '.dat'
         if not path.isfile(funfile):
-            log.warn("{} not found in {}".format(funcname, r))
+            log.info("{} not found in {}".format(funcname, r))
             continue
         with open(funfile) as f:
-            content = f.readline()
-        info = json.loads(content)
-        p_names = [x["name"] for x in info["parameters"]]
-        if not p_names:
-            log.warn("No parameters from {} in {}".format(funcname, r))
-            continue
-        log.info("Found '{}' as used parameters".format(", ".join(p_names)))
+            content = f.readlines()
+        for l in content:
+            info = json.loads(l)
+            p_names = [x["name"] for x in info["parameters"]]
+            if not p_names:
+                continue
 
-        for p in info["parameters"]:
-            if p["name"] not in parameters:
-                parameters[p["name"]] = []
-            parameters[p["name"]].append(p["content"])
+            for p in info["parameters"]:
+                if p["name"] not in parameters:
+                    parameters[p["name"]] = []
+                parameters[p["name"]].append(p["content"])
 
         find_dub(parameters)
         all_params.append(parameters)
+    find_dub_all(all_params)
 
 
 def find_dub(params):
@@ -46,6 +46,29 @@ def find_dub(params):
             tocheck.append(x)
         if len(tocheck) != len(set(tocheck)):
             log.warn("Same {} found in same run!".format(p))
+
+
+def find_dub_all(params):
+    ps = [p for p in params]
+    all_keys = []
+    for p in ps:
+        all_keys += p.keys()
+    all_keys = list(set(all_keys))
+
+    for key in all_keys:
+        index = 0
+        for param in params:
+            tocheck = params[:index] + params[index+1:]
+            listing = []
+            for c in tocheck:
+                if c.get(key):
+                    listing.append(c[key])
+            listing = [i for j in listing for i in j]
+            if params[index].get(key):
+                for x in params[index][key]:
+                    if x in listing:
+                        log.warn("Same {} found in different runs".format(key))
+            index = index + 1
 
 
 if __name__ == '__main__':
