@@ -17,6 +17,10 @@ $ source venv/bin/activate
 ## Documentation 
 The code is enough, it's just some lines.
 
+## Using the code
+Run `analyze.py` to get information from Frida
+Use `eval_results.py` to get information about the logged calls
+
 ## TODO:
 - More monitoring options:
 	- read content from addresses not only strings
@@ -31,6 +35,10 @@ The code is enough, it's just some lines.
 	- done for C headers, see `get_functions.py`
 		- still needs improvement for more complex headers, like `socket.h`
 - Analyse the results
+  - done for really simple analysis, still needs improvement
+    - double warning if multiple usages across calls
+    - infomation lacks quality
+    - should also work over multiple function
 - Automated module search (No need to set them manually in the config, can already be done but is really slow)
 - Fix string representation in results to show hex code instead of unicode
 
