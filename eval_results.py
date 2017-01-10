@@ -35,8 +35,17 @@ def main(target, funcname):
                 parameters[p["name"]] = []
             parameters[p["name"]].append(p["content"])
 
-        log.info(parameters)
+        find_dub(parameters)
         all_params.append(parameters)
+
+
+def find_dub(params):
+    for p in params:
+        tocheck = []
+        for x in params[p]:
+            tocheck.append(x)
+        if len(tocheck) != len(set(tocheck)):
+            log.warn("Same {} found in same run!".format(p))
 
 
 if __name__ == '__main__':
