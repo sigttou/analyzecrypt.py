@@ -1,0 +1,14 @@
+{
+    "classes":
+    [
+        {"name": "javax.crypto.Cipher"},
+        {"name": "javax.crypto.spec.IvParameterSpec"},
+        {"name": "javax.crypto.spec.SecretKeySpec"}
+    ],
+    "settings":
+    {
+        "print_calls": true,
+        "write_results": true
+    }
+}
+
